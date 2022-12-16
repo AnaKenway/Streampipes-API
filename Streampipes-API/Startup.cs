@@ -10,6 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Streampipes_API.Models;
+using Streampipes_API.Interfaces;
+using Microsoft.Extensions.Options;
+using Streampipes_API.Services;
 
 namespace Streampipes_API
 {
@@ -25,6 +29,14 @@ namespace Streampipes_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<StreampipesDatabaseSettings>(
+                Configuration.GetSection(nameof(StreampipesDatabaseSettings)));
+
+            services.AddSingleton<IStreampipesDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<StreampipesDatabaseSettings>>().Value);
+
+            services.AddSingleton<WeatherService>();
+
             services.AddControllers();
         }
 
