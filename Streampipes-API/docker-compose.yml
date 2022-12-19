@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  streampipes:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      - MONGODB_CONNSTRING=mongodb://@mongodb
+  mongodb:
+    image: "mongo:latest"
+    ports:
+      - 27017:27017
+    
