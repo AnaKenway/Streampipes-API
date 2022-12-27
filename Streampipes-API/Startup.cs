@@ -35,7 +35,7 @@ namespace Streampipes_API
             services.AddSingleton<IStreampipesDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<StreampipesDatabaseSettings>>().Value);
 
-            services.AddSingleton<WeatherService>();
+            services.AddSingleton<MonitoringDataService>();
 
             services.AddControllers();
         }

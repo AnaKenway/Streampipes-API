@@ -12,6 +12,8 @@ namespace Streampipes_API.Models
 
         public string DatabaseName { get; set; } 
 
-        public string CollectionName { get; set; } 
+        public string DataCollectionName { get; set; }
+
+        public string WarningsCollectionName { get; set; }
     }
 }
