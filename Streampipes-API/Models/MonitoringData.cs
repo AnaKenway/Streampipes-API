@@ -16,9 +16,9 @@ namespace Streampipes_API.Models
         public long Timestamp { get; set; }
 
         [JsonPropertyName("temperature")]
-        public double Temperature { get; set; }
+        public double? Temperature { get; set; }
 
         [JsonPropertyName("pressure")]
-        public double Pressure { get; set; }
+        public double? Pressure { get; set; }
     }
 }
