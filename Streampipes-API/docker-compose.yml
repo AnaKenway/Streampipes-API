@@ -4,12 +4,17 @@ services:
     build: .
     ports:
       - "8080:80"
-    environment:
-      - MONGODB_CONNSTRING=mongodb://@mongodb
-  mongodb:
-    image: "mongo:latest"
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb2
+    volumes:
+      - /mnt/influxdb/data:/var/lib/influxdb2:rw
+#    env_file:
+#      - .env
+#    entrypoint: ["./entrypoint.sh"]
     ports:
-      - 27017:27017
+      - 8086:8086
+    restart: unless-stopped
   grafana:
     image: grafana/grafana:9.1.1
     ports:
