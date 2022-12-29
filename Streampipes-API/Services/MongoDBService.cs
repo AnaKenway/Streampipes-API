@@ -10,11 +10,11 @@ using Streampipes_API.Interfaces;
 
 namespace Streampipes_API.Services
 {
-    public class MonitoringDataService
+    public class MongoDBService
     {
         private readonly IMongoCollection<MonitoringData> _monitoringData;
 
-        public MonitoringDataService(IStreampipesDatabaseSettings settings)
+        public MongoDBService(IStreampipesDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);

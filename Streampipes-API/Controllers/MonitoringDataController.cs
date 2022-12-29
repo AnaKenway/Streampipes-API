@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Streampipes_API.Models;
 using Streampipes_API.Interfaces;
 using Streampipes_API.Services;
+using InfluxDB.Client.Writes;
+using InfluxDB.Client.Api.Domain;
 
 namespace Streampipes_API.Controllers
 {
@@ -15,22 +17,41 @@ namespace Streampipes_API.Controllers
     public class MonitoringDataController : ControllerBase
     {
         private readonly ILogger<MonitoringDataController> _logger;
-        private readonly MonitoringDataService _monitoringService;
+        private readonly MongoDBService _mongoDBService;
+        private readonly InfluxDBService _influxService;
 
-        public MonitoringDataController(ILogger<MonitoringDataController> logger, MonitoringDataService monitoringService)
+        public MonitoringDataController(ILogger<MonitoringDataController> logger, MongoDBService monitoringService, InfluxDBService i)
         {
             _logger = logger;
-            _monitoringService = monitoringService;
+            _mongoDBService = monitoringService;
+            _influxService = i;
         }
 
         [HttpGet]
-        public ActionResult<List<MonitoringData>> Get() =>
-            _monitoringService.Get();
+        public  Task<IEnumerable<MonitoringData>> Get()
+        {
+            //_mongoDBService.Get();
+            return  _influxService.QueryAsync(async query =>
+            {
+                var flux = "from(bucket:\"test-bucket\") |> range(start: 0)";
+                var tables = await query.QueryAsync(flux, "organization");
+                return tables.SelectMany(table =>
+                    table.Records.Select(record =>
+                        new MonitoringData
+                        {
+                            //Timestamp = record.GetTime().Value,
+                            InfluxId = record.GetValue().ToString(),
+                            Temperature = double.Parse(record.GetValue().ToString()),
+                            Pressure = double.Parse(record.GetValue().ToString())
+                        }));
+            });
+        }
+            
 
         [HttpGet("{id:length(24)}", Name = "GetData")]
         public ActionResult<MonitoringData> Get(string id)
         {
-            var data = _monitoringService.Get(id);
+            var data = _mongoDBService.Get(id);
 
             if (data == null)
             {
@@ -43,22 +64,34 @@ namespace Streampipes_API.Controllers
         [HttpPost]
         public ActionResult<MonitoringData> Create(MonitoringData data)
         {
-            _monitoringService.Create(data);
+            //_mongoDBService.Create(data);
+            _influxService.Write(write =>
+            {
+                var point = PointData.Measurement("monitoringData")
+                    .Tag("monitoring", "test-monitoring")
+                    .Field("influx-id",data.InfluxId)
+                    .Field("pressure", data.Pressure)
+                    .Field("temperature",data.Temperature)
+                    .Timestamp(data.Timestamp, WritePrecision.Ns);
 
-            return CreatedAtRoute("GetData", new { id = data.Id.ToString() }, data);
+                write.WritePoint(point, "test-bucket", "organization");
+            });
+
+
+            return CreatedAtRoute("GetData", new { id = data.InfluxId.ToString() }, data);
         }
 
         [HttpPut("{id:length(24)}")]
         public IActionResult Update(string id, MonitoringData dataIn)
         {
-            var data = _monitoringService.Get(id);
+            var data = _mongoDBService.Get(id);
 
             if (data == null)
             {
                 return NotFound();
             }
 
-            _monitoringService.Update(id, dataIn);
+            _mongoDBService.Update(id, dataIn);
 
             return NoContent();
         }
@@ -66,14 +99,14 @@ namespace Streampipes_API.Controllers
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var data = _monitoringService.Get(id);
+            var data = _mongoDBService.Get(id);
 
             if (data == null)
             {
                 return NotFound();
             }
 
-            _monitoringService.Remove(id);
+            _mongoDBService.Remove(id);
 
             return NoContent();
         }

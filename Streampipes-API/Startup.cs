@@ -14,6 +14,7 @@ using Streampipes_API.Models;
 using Streampipes_API.Interfaces;
 using Microsoft.Extensions.Options;
 using Streampipes_API.Services;
+using Coravel;
 
 namespace Streampipes_API
 {
@@ -35,7 +36,9 @@ namespace Streampipes_API
             services.AddSingleton<IStreampipesDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<StreampipesDatabaseSettings>>().Value);
 
-            services.AddSingleton<MonitoringDataService>();
+            services.AddSingleton<MongoDBService>();
+
+            services.AddSingleton<InfluxDBService>();
 
             services.AddControllers();
         }

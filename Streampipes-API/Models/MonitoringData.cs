@@ -11,6 +11,9 @@ namespace Streampipes_API.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [JsonPropertyName("influx-id")]
+        public string InfluxId { get; set; }
+
         [JsonPropertyName("timestamp")]
         //in milliseconds, unix epoch time
         public long Timestamp { get; set; }
