@@ -28,10 +28,10 @@ namespace Streampipes_API.Controllers
         }
 
         [HttpGet]
-        public  Task<IEnumerable<MonitoringData>> Get()
+        public Task<IEnumerable<MonitoringData>> Get()
         {
             //_mongoDBService.Get();
-            return  _influxService.QueryAsync(async query =>
+            var results = _influxService.QueryAsync(async query =>
             {
                 var flux = "from(bucket:\"test-bucket\") |> range(start: 0)";
                 var tables = await query.QueryAsync(flux, "organization");
@@ -39,12 +39,13 @@ namespace Streampipes_API.Controllers
                     table.Records.Select(record =>
                         new MonitoringData
                         {
-                            //Timestamp = record.GetTime().Value,
+                            Timestamp = long.Parse(record.GetTime().Value.ToString()),
                             InfluxId = record.GetValue().ToString(),
                             Temperature = double.Parse(record.GetValue().ToString()),
                             Pressure = double.Parse(record.GetValue().ToString())
                         }));
             });
+            return results;
         }
             
 
@@ -72,13 +73,13 @@ namespace Streampipes_API.Controllers
                     .Field("influx-id",data.InfluxId)
                     .Field("pressure", data.Pressure)
                     .Field("temperature",data.Temperature)
-                    .Timestamp(data.Timestamp, WritePrecision.Ns);
+                    .Timestamp(data.Timestamp, WritePrecision.S);
 
                 write.WritePoint(point, "test-bucket", "organization");
             });
 
 
-            return CreatedAtRoute("GetData", new { id = data.InfluxId.ToString() }, data);
+            return NoContent();
         }
 
         [HttpPut("{id:length(24)}")]
