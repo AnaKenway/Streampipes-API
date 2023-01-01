@@ -28,7 +28,7 @@ namespace Streampipes_API.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<MonitoringData>> Get()
+        public Task<IEnumerable<MonitoringDataResponse>> Get()
         {
             //_mongoDBService.Get();
             var results = _influxService.QueryAsync(async query =>
@@ -37,12 +37,11 @@ namespace Streampipes_API.Controllers
                 var tables = await query.QueryAsync(flux, "organization");
                 return tables.SelectMany(table =>
                     table.Records.Select(record =>
-                        new MonitoringData
+                        new MonitoringDataResponse
                         {
-                            Timestamp = long.Parse(record.GetTime().Value.ToString()),
-                            InfluxId = record.GetValue().ToString(),
-                            Temperature = double.Parse(record.GetValue().ToString()),
-                            Pressure = double.Parse(record.GetValue().ToString())
+                            Timestamp = record.GetTime().Value.ToUnixTimeTicks(),
+                            Field = record.GetField().ToString(),
+                            Value = record.GetValue().ToString()
                         }));
             });
             return results;

@@ -2,6 +2,8 @@ using System;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using InfluxDB.Client.Core;
+
 
 namespace Streampipes_API.Models
 {
@@ -12,16 +14,20 @@ namespace Streampipes_API.Models
         public string Id { get; set; }
 
         [JsonPropertyName("influx-id")]
+        [Column("influx-id")]
         public string InfluxId { get; set; }
 
         [JsonPropertyName("timestamp")]
-        //in milliseconds, unix epoch time
+        [Column(IsTimestamp = true)]
+
         public long Timestamp { get; set; }
 
         [JsonPropertyName("temperature")]
+        [Column("temperature")]
         public double? Temperature { get; set; }
 
         [JsonPropertyName("pressure")]
+        [Column("pressure")]
         public double? Pressure { get; set; }
     }
 }

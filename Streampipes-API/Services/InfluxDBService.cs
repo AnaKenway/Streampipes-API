@@ -31,3 +31,8 @@ namespace Streampipes_API.Services
         }
     }
 }
+//Timestamp = long.Parse(record.GetTime().Value.ToString()),
+//                            InfluxId = record.Values["influx-id"].ToString(),
+//                            Temperature = double.Parse(record.Values["temperature"].ToString()),
+//                            Pressure = double.Parse(record.Values["pressure"].ToString())
+//write.WriteRecord($"monitoringData,monitoring=test-monitoring influx-id={data.InfluxId},temperature={data.Temperature},pressure={data.Pressure} {data.Timestamp}", WritePrecision.Ns, "test-bucket", "organization");
