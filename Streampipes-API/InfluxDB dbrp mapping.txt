@@ -1,0 +1,3 @@
+influx v1 dbrp create --db test-bucket --rp always --bucket-id f852d481491e9f48 --org-id a3886dca86c211f8 --token SD4QwyeZwrygB4MBihN3FmSALAAf6m1q1lB2pEZPCkHelZ65vM8kcBNT1Tr2X5SUahttfrTCiKWsM8w22oQ8OA==
+
+zameniti token sa novokreiranim tokenom, kao i org-id i ime bucket-a accordingly
