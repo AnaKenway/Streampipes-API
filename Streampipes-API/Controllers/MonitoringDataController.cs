@@ -46,69 +46,25 @@ namespace Streampipes_API.Controllers
             });
             return results;
         }
-            
-
-        [HttpGet("{id:length(24)}", Name = "GetData")]
-        public ActionResult<MonitoringData> Get(string id)
-        {
-            var data = _mongoDBService.Get(id);
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            return data;
-        }
 
         [HttpPost]
-        public ActionResult<MonitoringData> Create(MonitoringData data)
+        public ActionResult<MonitoringData> Create(MonitoringDataRequest request)
         {
-            //_mongoDBService.Create(data);
-            _influxService.Write(write =>
+            foreach (MonitoringData data in request.MonitoringDataList)
             {
-                var point = PointData.Measurement("monitoringData")
-                    .Tag("monitoring", "test-monitoring")
-                    .Field("influx-id",data.InfluxId)
-                    .Field("pressure", data.Pressure)
-                    .Field("temperature",data.Temperature)
-                    .Timestamp(data.Timestamp, WritePrecision.S);
+                _influxService.Write(write =>
+                {
+                    var point = PointData.Measurement("monitoringData")
+                        .Tag("monitoring", "test-monitoring")
+                        .Field("pressure", data.Pressure)
+                        .Field("temperature", data.Temperature)
+                        .Timestamp(data.Timestamp, WritePrecision.Ms);
 
-                write.WritePoint(point, "test-bucket", "organization");
-            });
-
-
-            return NoContent();
-        }
-
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, MonitoringData dataIn)
-        {
-            var data = _mongoDBService.Get(id);
-
-            if (data == null)
-            {
-                return NotFound();
+                    write.WritePoint(point, "test-bucket", "organization");
+                });
             }
 
-            _mongoDBService.Update(id, dataIn);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
-        {
-            var data = _mongoDBService.Get(id);
-
-            if (data == null)
-            {
-                return NotFound();
-            }
-
-            _mongoDBService.Remove(id);
-
-            return NoContent();
+            return Ok();
         }
     }
 }

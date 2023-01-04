@@ -8,7 +8,7 @@ services:
     image: influxdb:latest
     container_name: influxdb2
     volumes:
-      - /mnt/influxdb/data:/var/lib/influxdb2:rw
+      - influx-data:/var/lib/influxdb2:rw
 #    env_file:
 #      - .env
 #    entrypoint: ["./entrypoint.sh"]
@@ -25,4 +25,5 @@ services:
       - grafana-data:/var/lib/grafana
 volumes:
   grafana-data:
+  influx-data:
     
