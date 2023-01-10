@@ -52,16 +52,23 @@ namespace Streampipes_API.Controllers
         {
             foreach (MonitoringData data in request.MonitoringDataList)
             {
-                _influxService.Write(write =>
+                try
                 {
-                    var point = PointData.Measurement("monitoringData")
-                        .Tag(request.IsClean? "cleanData" : "dirtyData", request.IsClean ? "cleanData" : "dirtyData")
-                        .Field("pressure", data.Pressure)
-                        .Field("temperature", data.Temperature)
-                        .Timestamp(data.Timestamp, WritePrecision.Ms);
+                    _influxService.Write(write =>
+                    {
+                        var point = PointData.Measurement("monitoringData")
+                            .Tag(request.IsClean ? "cleanData" : "dirtyData", request.IsClean ? "cleanData" : "dirtyData")
+                            .Field("pressure", data.Pressure)
+                            .Field("temperature", data.Temperature)
+                            .Timestamp(data.Timestamp, WritePrecision.Ms);
 
-                    write.WritePoint(point, "test-bucket", "organization");
-                });
+                        write.WritePoint(point, "test-bucket", "organization");
+                    });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
             }
 
             return Ok();

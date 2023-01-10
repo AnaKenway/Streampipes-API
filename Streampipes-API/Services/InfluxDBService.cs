@@ -19,6 +19,7 @@ namespace Streampipes_API.Services
             //using var client = InfluxDBClientFactory.Create("http://localhost:8085", _token);
             using var client = InfluxDBClientFactory.Create("http://host.docker.internal:8085", _token);
             using var write = client.GetWriteApi();
+            Console.WriteLine(client.HealthAsync().Result);
             action(write);
         }
 
