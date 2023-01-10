@@ -29,6 +29,7 @@ namespace Streampipes_API.Controllers
                 var point = PointData.Measurement("monitoringData")
                     .Tag("security", "critical-alarm")
                     .Field("value", data.Value)
+                    .Field("outlier", data.Outlier)
                     .Timestamp(data.Timestamp, WritePrecision.Ms);
 
                 write.WritePoint(point, "test-bucket", "organization");

@@ -13,5 +13,7 @@ namespace Streampipes_API.Models
 
         [JsonPropertyName("timestamp")]
         public long Timestamp { get; set; }
+        [JsonPropertyName("value")]
+        public double Outlier { get; set; }
     }
 }
