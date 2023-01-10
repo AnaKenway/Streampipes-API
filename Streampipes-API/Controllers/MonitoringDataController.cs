@@ -55,7 +55,7 @@ namespace Streampipes_API.Controllers
                 _influxService.Write(write =>
                 {
                     var point = PointData.Measurement("monitoringData")
-                        .Tag("monitoring", "test-monitoring")
+                        .Tag(request.IsClean? "cleanData" : "dirtyData", request.IsClean ? "cleanData" : "dirtyData")
                         .Field("pressure", data.Pressure)
                         .Field("temperature", data.Temperature)
                         .Timestamp(data.Timestamp, WritePrecision.Ms);

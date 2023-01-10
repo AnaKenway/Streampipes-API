@@ -12,5 +12,7 @@ namespace Streampipes_API.Models
         public List<MonitoringData> MonitoringDataList { get; set; }
         [JsonPropertyName("timestamp")]
         public long Timestamp { get; set; }
+        [JsonPropertyName("isClean")]
+        public bool IsClean { get; set; }
     }
 }
