@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  streampipes:
+    build: .
+    ports:
+      - "8080:80"
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb2
+    volumes:
+      - influx-data:/var/lib/influxdb2:rw
+#    env_file:
+#      - .env
+#    entrypoint: ["./entrypoint.sh"]
+    ports:
+      - 8085:8086
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana:9.1.1
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+volumes:
+  grafana-data:
+  influx-data:
+    
