@@ -1,0 +1,14 @@
+# Those parameters are used by IntelliJ to set the default consul parameters for development
+# SP
+# Used when executed outside of Docker container (Overrides SERVICE_HOST and SERVICE_PORT)
+
+#SP_PORT=8030 # port of this extension running from IDE
+SP_DEBUG=true #overwrites both kafka settings from localhost to ENV
+CONSUL_LOCATION=localhost
+SP_HOST=192.168.0.32 # using IP to register to consul with this one, so it will be available to others
+
+# Kafka
+KAFKA_HOST=localhost
+KAFKA_PORT=9094
+
+DEPLOYMENT_NAME=Local

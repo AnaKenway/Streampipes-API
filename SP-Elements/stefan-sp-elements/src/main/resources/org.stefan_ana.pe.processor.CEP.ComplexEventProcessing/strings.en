@@ -1,0 +1,23 @@
+org.stefan_ana.pe.processor.CEP.ComplexEventProcessing.title=Complex Event Processing
+org.stefan_ana.pe.processor.CEP.ComplexEventProcessing.description=Detects a trend based on numerical comparison in incoming events using Siddhi engine to perform Complex Event Processing
+
+property-key.title=Property
+property-key.description=Property which trend is being detected
+
+window-length-key.title=Window length
+window-length-key.description=Length of the trend being detected
+
+window-length-key-critical.title=Window of critical time (in minutes)
+window-length-key-critical.description=Last n minutes time for tracking critical warnings
+
+operator-key.title=Comparison operator
+operator-key.description=Comparison operator that is used in trend detection
+
+comparison-value-key.title=Comparison value
+comparison-value-key.description=Comparison value that is used in trend detection
+
+comparison-value-key2.title=Comparison value
+comparison-value-key2.description=
+
+output-name-key.title=Output property name
+output-name-key.description=Name of the output property which values are either "True" or "False"
